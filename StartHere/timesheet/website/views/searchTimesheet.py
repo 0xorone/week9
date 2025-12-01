@@ -6,7 +6,8 @@ from django.contrib.auth.decorators import login_required
 def search(request):
     searchText = request.GET.get('searchText')
     if not searchText is None:
-        searchTimesheets = Timesheet.objects.filter(notes__contains=searchText)
+        sqlString = "SELECT id, notes FROM website_timesheet WHERE notes LIKE '%" + searchText + "%'"
+        searchTimesheets = Timesheet.objects.raw(sqlString)
         return render(request, 'website/searchTimesheet.html', {'searchResults': searchTimesheets})
 
     return render(request, 'website/searchTimesheet.html')
