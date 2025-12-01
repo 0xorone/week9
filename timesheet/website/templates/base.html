@@ -1,0 +1,93 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="en">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/main_styles.css">
+</head>
+<body style="background-color: beige;">
+
+<script>
+
+{% if user.is_staff %}
+    adminVisibility = 'visible';
+{% else %}
+    adminVisibility = 'hidden';
+{% endif %}
+
+{% if user.username == 'admin' %}
+    allowApprove = true;
+{% endif %}
+
+</script>
+
+<div class="top_container">
+
+    <div class="sidebar">
+
+        <div class="cart d-flex flex-row align-items-center justify-content-start">
+            <nav class="sidebar_user">
+                <ul>
+                    {% if user.is_authenticated %}
+                        <li><a href="myUser">User: &nbsp; {{request.user.username}}</a></li>
+                        <li><a href={% url 'logout' %}>(Logout)</a><li>
+                    {% else %}
+                        <li><a href={% url 'login' %}>Login</a><li></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+
+        <div class="sidebar_logo">
+            <img width="60" src="/static/images/stop-watch_White.png" alt="">
+        </div>
+
+        <nav class="sidebar_nav" id="AdminLink" style="visibility:hidden">
+            <ul>
+                <!--Admin Endpoint, make sure only admin sees this! -->
+                <li><a href="/item">Edit Users</a></li>
+            </ul>
+            
+        </nav>
+
+        <nav class="sidebar_nav">
+            <ul>
+                <li><a href={% url 'myUser' %}>My User</a></li>
+                <li><a href={% url 'timesheets' %}>Upload Timesheet</a></li>
+                <li><a href={% url 'timesheets' %}>Add Timesheet</a></li>
+                <li><a href={% url 'searchResults' %}>Search Timesheets</a></li>
+                
+            </ul>
+        </nav>
+
+    </div>
+<div class="body_content">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script>
+$('#AdminLink').css("visibility", adminVisibility) 
+
+function getCookie(name)
+  {
+    var regularExpression = new RegExp(name + "=([^;]+)");
+    var value = regularExpression.exec(document.cookie);
+    return (value != null) ? unescape(value[1]) : null;
+  }
+
+</script>
+
+{% block scripts %}
+
+
+
+{% endblock %}
+
+</body>
+</html>
